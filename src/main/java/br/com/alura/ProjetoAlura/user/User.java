@@ -1,53 +1,39 @@
 package br.com.alura.ProjetoAlura.user;
 
-import br.com.alura.ProjetoAlura.util.EncryptUtil;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@NoArgsConstructor(force = true)
+@RequiredArgsConstructor
 @Entity
+@Table(name = "User")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
-    private String name;
+
+    @Column(nullable = false)
+    private final String name;
+
+    @Column(nullable = false, unique = true)
+    private final String email;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(columnDefinition = "ENUM('STUDENT', 'INSTRUCTOR')", nullable = false)
+    private final Role role;
 
-    private String email;
-    private String password;
+    @Column(nullable = false)
+    private final String password;
 
-    @Deprecated
-    public User() {}
-
-    public User(String name, String email, Role role, String password) {
-        this.name = name;
-        this.role = role;
-        this.email = email;
-        this.password = EncryptUtil.toMD5(password);
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 }
